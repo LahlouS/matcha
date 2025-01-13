@@ -1,0 +1,48 @@
+services:
+  nginx:
+    image: nginx
+    build:
+      context: ./
+      dockerfile: ./nginxProxy/Dockerfile.nginx
+    ports:
+      - '8080:8080'
+    depends_on:
+      - matcha # Ensures server starts before nginx
+    networks:
+      - app-network
+
+  matcha:
+    image: matcha-sveltkit-prod
+    restart: on-failure
+    build:
+      context: ./
+      dockerfile: Dockerfile.prod
+    env_file:
+      - .env
+    container_name: matcha-sveltkit-prod
+    volumes:
+      - ./database:/usr/src/app/database
+      - ./profile-pictures:/usr/src/app/profile-pictures
+      - ./build:/usr/src/app/build
+      - /usr/src/app/node_modules
+    networks:
+      - app-network
+
+  db_viz:
+    image: sqlite-web
+    restart: on-failure
+    build:
+      context: ./
+      dockerfile: Dockerfile.db-viz
+    container_name: sqlite-web
+    ports:
+      - 4565:4565
+    volumes:
+      - ./database:/data
+    environment:
+      - SQLITE_DATABASE=/data/database.db
+      - PORT=4565
+
+networks:
+  app-network:
+    driver: bridge

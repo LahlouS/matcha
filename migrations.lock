@@ -1,0 +1,9 @@
+{
+  "001_create_tables.sql": "bfe453b28af3ec8a22d9601e6c876e884b55a9aace2e27c02cd0a68bfe715bfc",
+  "002_add_password_to_users.sql": "5585f122f98432901dbc96261260f9d37b700458881911f22042d368233b9ed5",
+  "003_create_session_table.sql": "5030a2b7e192d02c4914899d944aec17ac712f9ef3d69c7efa56df1d28774561",
+  "004_add_username_index.sql": "f8ac1c688f668467ed55a0a54988a1df709df6b0726ac8297937b4f168fbdd8a",
+  "005_create_profile_table.sql": "e09b602aa31e48bae009dd42efdca8efb27565de1e319b1fd27440fd91a3f1bd",
+  "006_add_profile_setup_to_users.sql": "8d8c3e66fa4ea4b4b5dd7a4dd477bfe9edd5492415c62dcb1288fc9afc00a156",
+  "007_create_tags_table.sql": "46bf31b44223df3d9cf2ee908070545ee2010bd8595e63aae23767516d10048b"
+}

@@ -1,0 +1,2 @@
+ALTER TABLE profile_info
+ADD COLUMN age INTEGER;

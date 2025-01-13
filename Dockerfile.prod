@@ -1,0 +1,63 @@
+# Development Stage
+FROM node:20 AS development
+ENV NODE_ENV=development
+# Set the working directory for your app inside the container
+WORKDIR /usr/src/app
+# Install pnpm globally for package management
+RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install
+RUN pnpm add dotenv
+
+# Copy the rest of the application files
+COPY . .
+
+# Build the application (this will include dev dependencies)
+RUN pnpm run build
+
+RUN set -x && pnpm run db:migrate
+RUN pnpm run script:fake_users
+
+# Production Stage
+FROM node:20 AS production
+ARG SVELTE_PORT
+ARG PUBLIC_BASE_URL
+ARG ORIGIN
+ARG INTERNAL_URL
+
+ENV NODE_ENV=production
+ENV PORT=${SVELTE_PORT}
+ENV PUBLIC_BASE_URL=${PUBLIC_BASE_URL}
+ENV ORIGIN=${ORIGIN}
+ENV INTERNAL_URL=${INTERNAL_URL}
+# Set the working directory for your app inside the container
+WORKDIR /usr/src/app
+
+# Copy only the necessary production files from the previous stage (development stage)
+COPY --from=development /usr/src/app/build /usr/src/app/build-init
+COPY --from=development /usr/src/app/prod-socket-server /usr/src/app/prod-socket-server
+COPY --from=development /usr/src/app/database /usr/src/app/database-init
+COPY --from=development /usr/src/app/static/default_profile_picture.jpg /usr/src/app/static/default_profile_picture.jpg
+COPY --from=development /usr/src/app/profile-pictures /usr/src/app/profile-pictures-init
+COPY --from=development /usr/src/app/node_modules /usr/src/app/node_modules
+
+COPY static/fake_user.cjs ./
+COPY static/profile_pictures ./static/profile_pictures
+COPY package.json ./
+COPY entrypoint.prod.sh ./
+RUN chmod +x entrypoint.prod.sh
+COPY .env /usr/src/app/.env
+
+RUN npm install -g pnpm
+RUN pnpm install --prod
+
+
+# Expose the application port
+EXPOSE $PORT
+
+# Define the entrypoint for the container
+ENTRYPOINT ["/usr/src/app/entrypoint.prod.sh"]
+CMD ["pnpm", "script:prod_socket_server"]
+
+
+
