@@ -24,6 +24,7 @@ vite.config.ts.timestamp-*
 # Data
 database.db
 database/database.db
+database/migrations.lock
 database/profile-pictures
 
 profile-pictures/*
