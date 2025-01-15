@@ -15,14 +15,11 @@ WORKDIR /usr/src/app
 # Copy only the necessary production files from the previous stage (development stage)
 COPY ./build /usr/src/app/build
 COPY ./prod-socket-server /usr/src/app/prod-socket-server
-COPY ./database /usr/src/app/database-init
+COPY ./database /usr/src/app/database
 COPY ./static /usr/src/app/static
-COPY ./profile-pictures /usr/src/app/profile-pictures-init
-COPY --from=development /usr/src/app/node_modules /usr/src/app/node_modules
+COPY ./profile-pictures /usr/src/app/profile-pictures
 
 COPY package.json ./
-COPY entrypoint.prod.sh ./
-RUN chmod +x entrypoint.prod.sh
 COPY .env /usr/src/app/.env
 
 RUN npm install -g pnpm
@@ -33,8 +30,7 @@ RUN pnpm install --prod
 EXPOSE $PORT
 
 # Define the entrypoint for the container
-ENTRYPOINT ["/usr/src/app/entrypoint.prod.sh"]
-CMD ["pnpm", "script:prod_socket_server"]
+ENTRYPOINT ["pnpm", "script:prod_socket_server"]
 
 
 
