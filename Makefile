@@ -11,7 +11,7 @@ DB_PATH := ./database
 all: ${NAME}
 
 prod :
-	${DOCKER_PROD} up --build
+	${DOCKER_PROD} up --build -d
 
 
 fake_users_prod:
