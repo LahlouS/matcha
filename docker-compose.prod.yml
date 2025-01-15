@@ -28,21 +28,6 @@ services:
     networks:
       - app-network
 
-  db_viz:
-    image: sqlite-web
-    restart: on-failure
-    build:
-      context: ./
-      dockerfile: Dockerfile.db-viz
-    container_name: sqlite-web
-    ports:
-      - 4565:4565
-    volumes:
-      - ./database:/data
-    environment:
-      - SQLITE_DATABASE=/data/database.db
-      - PORT=4565
-
 networks:
   app-network:
     driver: bridge

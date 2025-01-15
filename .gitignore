@@ -42,3 +42,6 @@ node_modules/
 
 *.key
 *.crt
+
+nginxProxy/private.key
+nginxProxy/private.key
