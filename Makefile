@@ -13,30 +13,16 @@ all: ${NAME}
 prod :
 	${DOCKER_PROD} up --build
 
-migrate:
-	${DOCKER_DEV} exec matcha pnpm run db:migrate
-
-dev :
-	${DOCKER_DEV} up --build
-
-fake_users:
-	${DOCKER_DEV} exec matcha pnpm run script:fake_users -- --num=${num}
 
 fake_users_prod:
 	${DOCKER_DEV} exec matcha pnpm run script:fake_users_prod -- --num=${num}
 
-down_dev :
-	${DOCKER_DEV} down
 
 down_prod :
 	${DOCKER_PROD} down
 
 
-test :
-	${DOCKER_DEV} exec matcha pnpm run test:unit
-
-
-prune : down_dev down_prod
+prune : down_prod
 	rm -rf build/*
 	docker system prune -a --volumes -f
 
